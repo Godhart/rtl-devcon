@@ -1,0 +1,28 @@
+FROM hdl-code-base:latest
+
+###############################################################################
+# OSS
+#####
+RUN \
+        python3 -m pip install cocotb==1.6.2 \
+    &&  python3 -m pip install cocotb[bus]==1.6.2 \
+    &&  python3 -m pip install pyuvm==2.7.0 \
+    &&  python3 -m pip install pytest \
+    &&  python3 -m pip install teroshdl
+
+###############################################################################
+# User related stuff
+####################
+ARG UID=1000
+ARG GID=1000
+ARG PWD=2OYyoafdd2RFtSB8L1y
+ARG UNAME=code
+
+RUN \
+        groupadd -g ${GID} ${UNAME} \
+    &&  useradd -m -u ${UID} -g ${GID} ${UNAME} \
+    &&  echo "${UNAME}:${PWD}" | chpasswd
+
+WORKDIR /home/${UNAME}
+
+USER ${UNAME}

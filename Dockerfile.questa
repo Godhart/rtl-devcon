@@ -1,0 +1,57 @@
+# Based on https://blog.reds.ch/?p=551
+
+FROM hdl-code-base:latest
+
+###############################################################################
+# Questa
+########
+ADD  opt.tar.gz /
+
+COPY docker_mgls       /opt/questa/questasim/linux_x86_64/mgls/lib/mgls_asynch
+
+COPY docker_locked.dat /opt/questa/questasim/linux_x86_64/license.dat
+
+ENV  PATH="/opt/questa/questasim/linux_x86_64/:${PATH}"
+
+ENV  LM_LICENSE_FILE=/opt/questa/questasim/linux_x86_64/license.dat
+
+###############################################################################
+# OSS
+#####
+RUN \
+        python3 -m pip install cocotb==1.6.2 \
+    &&  python3 -m pip install cocotb[bus]==1.6.2 \
+    &&  python3 -m pip install pyuvm==2.7.0 \
+    &&  python3 -m pip install pytest \
+    &&  python3 -m pip install teroshdl
+
+###############################################################################
+# User related stuff
+####################
+ARG UID=1000
+ARG GID=1000
+ARG PWD=2OYyoafdd2RFtSB8L1y
+ARG UNAME=code
+
+RUN \
+        groupadd -g ${GID} ${UNAME} \
+    &&  useradd -m -u ${UID} -g ${GID} ${UNAME} \
+    &&  echo "${UNAME}:${PWD}" | chpasswd
+
+WORKDIR /home/${UNAME}
+
+### Change ownership to user for copied questa files
+RUN \
+        chmod 770 /opt/questa/questasim/linux_x86_64/mgls/lib/mgls_asynch \
+    &&  chown ${UID}:${GID} /opt/questa/questasim/linux_x86_64/mgls/lib/mgls_asynch \
+    &&  chown ${UID}:${GID} /opt/questa/questasim/linux_x86_64/license.dat
+
+USER ${UNAME}
+
+###############################################################################
+# Container running questa on start (if necessary to do so)
+###########################################################
+# CMD  ["/opt/questa/questasim/linux_x86_64/vsim"]
+
+# ENTRYPOINT ["/opt/questa/questasim/linux_x86_64/vsim"]
+# CMD  ["-help"]

@@ -1,0 +1,40 @@
+FROM archlinux
+
+###############################################################################
+# Common stuff for HDL development
+#####
+RUN pacman -Sy --noconfirm \
+    make \
+    gcc \
+    python \
+    python-pip \
+    perl \
+    git \
+    \
+    which \
+    libxft \
+    ksh \
+    net-tools \
+    iproute2 \
+    curl \
+    \
+    ghdl-gcc \
+    yosys \
+    iverilog \
+    verilator \
+    gtkwave
+
+# Enabled aux things:
+#    iproute2 \    - useful to check isolation prior to running
+#    curl \        - check isolation and handy http getter
+
+# Disabled aux things:
+#    ssh \
+#    xvfb \
+
+# ssh      - may be useful when things aren't working right
+
+# xvfb     - may be useful to suppress GUI https://linuxhint.com/install-xvfb-ubuntu/
+#            Execute following two lines before running GUI app:
+#            Xvfb :1 -screen 0 1920x1080x24+32 -fbdir /var/tmp &
+#            export DISPLAY=:1

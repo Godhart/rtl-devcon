@@ -1,0 +1,29 @@
+FROM ubuntu:20.04
+
+# TODO: remake for archlinux
+
+###############################################################################
+# Faketime for build purposes
+#############################
+COPY --from=ubuntu-libfaketime /faketime.so /lib/faketime.so
+
+ENV LD_PRELOAD=/lib/faketime.so
+ENV FAKETIME="@2021-09-01 08:00:00"
+# ENV FAKETIME_DONT_RESET=1
+ENV DONT_FAKE_MONOTONIC=1
+
+###############################################################################
+# User related stuff
+####################
+ARG UID=1000
+ARG GID=1000
+ARG PWD=2OYyoafdd2RFtSB8L1y
+ARG UNAME=code
+
+RUN  groupadd -g ${GID} ${UNAME} \
+  && useradd -m -u ${UID} -g ${GID} ${UNAME} \
+  && echo "${UNAME}:${PWD}" | chpasswd
+
+WORKDIR /home/${UNAME}
+
+USER ${UNAME}
