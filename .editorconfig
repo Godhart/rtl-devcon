@@ -11,10 +11,13 @@ trim_trailing_whitespace = true
 [.editorconfig]
 insert_final_newline = true
 
-[.dockerignore]
+[.gitignore]
 insert_final_newline = true
 
-[.gitignore]
+[.gitattributes]
+insert_final_newline = true
+
+[.dockerignore]
 insert_final_newline = true
 
 [Makefile]
