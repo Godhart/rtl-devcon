@@ -11,7 +11,7 @@ all: docker-oss docker-network
 
 .PHONY: clean-all
 clean-all: clean-network
-	docker rmi $(docker images --filter=reference="hdl-code-questa-*:*" -q) || echo "" && \
+	docker rmi $(shell docker images --filter=reference="hdl-code-questa-*:*" -q) || echo "" && \
 	docker image rm hdl-code-oss		|| echo "" && \
 	docker image rm hdl-code-base		|| echo ""
 
