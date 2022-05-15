@@ -22,7 +22,8 @@ RUN pacman -Sy --noconfirm \
     yosys \
     iverilog \
     verilator \
-    gtkwave
+    gtkwave \
+    base-devel
 
 # Enabled aux things:
 #    iproute2 \    - useful to check isolation prior to running
@@ -38,3 +39,14 @@ RUN pacman -Sy --noconfirm \
 #            Execute following two lines before running GUI app:
 #            Xvfb :1 -screen 0 1920x1080x24+32 -fbdir /var/tmp &
 #            export DISPLAY=:1
+
+###############################################################################
+# yay for installing from AUR
+#####
+# alternate way to install yay install due to complicated things
+# used code from https://github.com/greyltc-org/docker-archlinux-aur/blob/master/Dockerfile
+# install helper and add a user for it
+ADD add-aur.sh /root
+RUN chmod +x /root/add-aur.sh && /bin/bash /root/add-aur.sh
+# now to install from the AUR, you might do something like this in your Dockerfile:
+# RUN aur-install aur-package1 aur-package2 non-aur-package3

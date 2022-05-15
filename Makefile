@@ -51,7 +51,7 @@ DOCKER_RUN = docker run --rm -it \
 		--volume="$(XAUTH):$(XAUTH)" \
 		--volume="${CODE_HOME}:/home/code" \
 		--volume="${CODE_PROJECT}:/data/project" \
-		-u `id -u ${USER}`:`id -g ${USER}` \
+		-u `id -u ${USER}`:`id -g ${USER}`
 
 DOCKER_MAKE = docker run --rm -it \
 		$(NETWORK) $(NETNAME) \
@@ -61,7 +61,13 @@ DOCKER_MAKE = docker run --rm -it \
 		--volume="$(XAUTH):$(XAUTH)" \
 		--volume="${CODE_PROJECT}:/data/project" \
 		--workdir="/data/project" \
-		-u `id -u ${USER}`:`id -g ${USER}` \
+		-u `id -u ${USER}`:`id -g ${USER}`
+
+DOCKER_VSCS = docker run --rm -it \
+		--network=host \
+		--volume="${VSCS_HOME}:/home/code" \
+		--volume="${CODE_PROJECT}:/data/project" \
+		-u `id -u ${USER}`:`id -g ${USER}`
 
 .PHONY: run
 run: X11
@@ -74,3 +80,15 @@ make: X11
 		$(DOCKER_MAKE) \
 		hdl-code-${IMG}:latest \
 		make ${TARGET}
+
+.PHONY: vscs
+vscs:
+		$(DOCKER_VSCS) \
+		hdl-code-${IMG}:latest \
+		code-server
+
+.PHONY: vscs-dev
+vscs-dev:
+		$(DOCKER_VSCS) \
+		hdl-code-${IMG}:latest \
+		/bin/bash
